@@ -1,11 +1,11 @@
 #include "main.h"
 
 /**
- * main - check the code
+ * print_alphabet - prints the alphabet in lowercase.
  *
- * Return: Always 0.
+ * Return: Always 0 (Success)
  */
-main(void)
+void print_alphabet(void)
 {
 int ch;
 ch = 97;
