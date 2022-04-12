@@ -1,5 +1,5 @@
-#include <stdio.h>
-void print_alphabet(void);
+#include <main.h>
+
 /**
  * main - check the code
  *
@@ -14,6 +14,6 @@ while (ch < 123)
 _putchar("%c", ch);
 ch++;
 }
-_putchar("\n");
+_putchar('\n');
 }
 
