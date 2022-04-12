@@ -15,6 +15,6 @@ int main(void)
 	{
 		_putchar(str[count]);
 	}
-	_putchar(stderr, "\n");
+	_putchar(stderr, '\n');
 	return (0);
 }
