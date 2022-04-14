@@ -1,7 +1,7 @@
 #include "main.h"
 
 /**
-*print_line - printes diagonal using miltiple \.
+*print_diagonal - printes diagonal using miltiple \.
 *@n: number of times the character is printed.
 *Return: no return.
 */
