@@ -1,4 +1,5 @@
 #include "main.h"
+
 /**
  * _isupper - check the code.
  * @c: input character.
@@ -6,8 +7,6 @@
  */
 int _isupper(int c)
 {
-	int c;
-
 	if ((c >= 65) && (c <= 90))
 	{
 		return (1);
@@ -16,5 +15,4 @@ int _isupper(int c)
 	{
 		return (0);
 	}
-
 }

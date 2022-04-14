@@ -1,4 +1,5 @@
 #include "main.h"
+
 /**
 *_isdigit - checks code for digit (0 - 9).
 *@c: input digit to be chacked.
@@ -6,8 +7,6 @@
 */
 int _isdigit(int c)
 {
-	int c;
-
 	if (c >= 48 && c <= 57)
 	{
 		return (1);
