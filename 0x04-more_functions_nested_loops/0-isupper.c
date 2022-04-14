@@ -8,8 +8,6 @@ int _isupper(int c)
 {
 	int c;
 
-	printf("Enter any character uppercase ro lowercase: ");
-	scanf("%c", &c);
 	if ((c >= 65) && (c <= 90))
 	{
 		return (1);
