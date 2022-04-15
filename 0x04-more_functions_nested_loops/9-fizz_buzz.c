@@ -16,9 +16,9 @@ int main(void)
 	for (i = 2; i <= 100; i++)
 	{
 		if ((i % 3 == 0) && (i % 5 == 0))
-			printf(" FuzzBuzz");
+			printf(" FizzBuzz");
 		else if (i % 3 == 0)
-			printf(" Fuzz");
+			printf(" Fizz");
 		else if (i % 5 == 0)
 			printf(" Buzz");
 		else
