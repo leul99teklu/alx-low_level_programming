@@ -18,6 +18,6 @@ void print_rev(char *s)
 	}
 
 	for (sting--; sting >= 0; sting--)
-		_putcahr(s[sting]);
+		_putchar(s[sting]);
 	_putchar('\n');
 }
