@@ -12,7 +12,7 @@ char *_strcpy(char *dest, char *src)
 
 	while (sting >= 0)
 	{
-		*(dust + sting) = *(src + sting);
+		*(dest + sting) = *(src + sting);
 		if (*(src + sting) == '\0')
 			break;
 		sting++;
