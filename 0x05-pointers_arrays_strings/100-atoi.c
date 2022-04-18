@@ -28,7 +28,7 @@ int _atoi(char *s)
 
 	for (p = sting - len; p < sting; p++)
 	{
-		mc = mc + ((*(s + i) - 48) * x);
+		mc = mc + ((*(s + p) - 48) * x);
 		x /= 10;
 	}
 	return (mc * jd);
