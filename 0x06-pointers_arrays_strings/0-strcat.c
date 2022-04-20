@@ -6,10 +6,9 @@
 *@src: input string.
 *Return: dest (secess).
 */
-char *_strcat(char *dest char *src)
+char *_strcat(char *dest, char *src)
 {
-	int sting1 = 0;
-	int sting2 = 0;
+	int sting1 = 0, sting2 = 0;
 
 	while (*(dest + sting1) != '\0')
 	{
