@@ -1,197 +1,137 @@
-#include <stdlib.h>
 #include "main.h"
+#include <stdio.h>
+#include <stdlib.h>
 /**
- * _prt - print string followed by newline
- * @s: string to print
- */
-void _prt(char *s)
+  * int_calloc - special calloc but 4 int arrays
+  * @nmemb: n memb
+  * @size: size of array
+  * Return: int *
+  */
+int *int_calloc(int nmemb, unsigned int size)
 {
-	while (*s != '\0')
-		_putchar(*s++);
-	_putchar('\n');
-}
-/**
- * _realloc - Re-allocate memory for a larger or smaller size
- * @ptr: Pointer to the old memory block
- * @old_size: The old size of the memory block
- * @new_size: The new size of the memory block being created
- *
- * Return: Pointer to new memory
- */
-void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size)
-{
-	void *space;
-	char *spacecpy, *ptrcpy;
-	unsigned int i;
-
-	if (new_size == 0 && ptr != NULL)
-	{
-		free(ptr);
-		return (NULL);
-	}
-	if (new_size == old_size)
-		return (ptr);
-	/* regardless, we need to make new space of new_size */
-	space = malloc(new_size);
-	if (space == NULL)
-		return (NULL);
-	/* if ptr is null, return space without copying */
-	if (ptr == NULL)
-		return (space);
-	/* copy old contents into new space */
-	spacecpy = space;
-	ptrcpy = ptr;
-	for (i = 0; i < old_size && i < new_size; i++)
-		spacecpy[i] = ptrcpy[i];
-	free(ptr);
-	return (space);
-}
-/**
- * _calloc - Allocate memory and initalize space to zero
- * @nmemb: number of elements
- * @size: size of bytes
- *
- * Return: pointer to memory space, or NULL
- */
-void *_calloc(unsigned int nmemb, unsigned int size)
-{
-	void *space;
-	char *memset;
-	unsigned int i;
-
+	/* declarations */
+	int *p, n;
+	/* checking inputs */
 	if (nmemb == 0 || size == 0)
 		return (NULL);
-	space = malloc(nmemb * size);
-	if (space == NULL)
+	/* malloc the space & check for fail */
+	p = malloc(nmemb * size);
+	if (p == NULL)
 		return (NULL);
-
-	memset = space;
-	for (i = 0 ; i < nmemb * size; i++)
-	{
-		*(memset + i) = 0;
-	}
-
-	return (space);
+	/* calloc */
+	for (n = 0; n < nmemb; n++)
+		p[n] = 0;
+	return (p);
 }
-/**
- * _notdigit - check to see if string is only digits
- * @s: string to check
- *
- * Return: 0 if only digits, 1 if non digit chars
- */
-int _notdigit(char *s)
-{
-	for ( ; *s; s++)
-		if (*s < '0' || *s > '9')
-			return (1);
-	return (0);
-}
-/**
- * rev_ - Reverse a string in place
- * @s: string to reverse
- */
-void rev_(char *s)
-{
-	char tmp;
-	int i, j;
 
-	for (i = 0; s[i]; i++)
-		;
-	i--;
-	for (j = 0; j <= i / 2; j++)
-	{
-		tmp = s[j];
-		s[j] = s[i - j];
-		s[i - j] = tmp;
-	}
-}
 /**
- * _addup - add up integer array
- * @arr: array to count
- * @n: number of ints to count
- * @place: which tens place to count
- *
- * Return: result of addition
- */
-int _addup(int *arr, int n, int place)
+  * mult - multiplication
+  * @product: int * 4 answer
+  * @n1: string num1
+  * @n2: string num2
+  * @len1: len num1
+  * @len2: len num2
+  * Return: void
+  */
+void mult(int *product, char *n1, char *n2, int len1, int len2)
 {
-	int sum, i;
-
-	for (i = 0, sum = 0; i < n; i++)
-	{
-		sum += arr[n * i + place];
-	}
-	return (sum);
-}
-/**
- * cut_zeros - cut off my zeros
- * @s: string to cut
- *
- * Return: length of s
- */
-int cut_zeros(char *s)
-{
+	/* declarations */
 	int i;
-
-	i = 0;
-	while (*s != '\0')
+	int j;
+	int f1, f2;
+	int sum;
+	/* the long math */
+	for (i = len1 - 1; i >= 0; i--)
 	{
-		i++;
-		s++;
+		sum = 0;
+		f1 = n1[i] - '0';
+		for (j = len2 - 1; j >= 0; j--)
+		{
+			f2 = n2[j] - '0';
+			sum += product[i + j + 1] + (f1 * f2);
+			product[i + j + 1] = sum % 10;
+			sum /= 10;
+		}
+		if (sum > 0)
+			product[i + j + 1] += sum;
 	}
-	i--;
-	s--;
-	while (*s == '0' && i > 0)
-	{
-		*s = '\0';
-		s--;
-		i--;
-	}
-	return (i);
+	for (i = 0; product[i] == 0 && i < len1 + len2; i++)
+	{}
+	if (i == len1 + len2)
+		_putchar('0');
+	for (; i < len1 + len2; i++)
+		_putchar(product[i] + '0');
+	_putchar('\n');
 }
 
 /**
- * main - multiple two numbers and print the result
- * @argc: Number of arguments
- * @argv: Argument strings
- *
- * Return: 0
- */
-int main(int argc, char *argv[])
+  * is_valid - is the number a valid one
+  * @num : char string num
+  * Return: int, 1 if true 0 if false
+  */
+int is_valid(char *num)
 {
-	int *calc;
-	char *final;
-	unsigned int l1, l2, lsum, i, j, ntmp, rolltmp;
-
-	if (argc != 3)
-		_prt("Error"), exit(98);
-	if (_notdigit(argv[1]) || _notdigit(argv[2]))
-		_prt("Error"), exit(98);
-	for (l1 = 0; argv[1][l1]; l1++)
-		;
-	for (l2 = 0; argv[2][l2]; l2++)
-		;
-	lsum = l1 + l2, final = malloc((lsum + 2) * sizeof(*final));
-	calc = _calloc(lsum * lsum, sizeof(int));
-	if (calc == NULL)
-		_prt("Error"), exit(98);
-	rev_(argv[1]), rev_(argv[2]);
-	for (i = 0; i < l1; i++)
+	/* declarations */
+	int i;
+	/* checking for ints */
+	for (i = 0; num[i]; i++)
 	{
-		rolltmp = 0, ntmp = 0;
-		for (j = 0; j < l2; j++)
-		{
-			ntmp = (argv[1][i] - '0') * (argv[2][j] - '0') + rolltmp;
-			calc[i * lsum + j + i] = ntmp % 10, rolltmp = ntmp / 10;
-		}
-		for (; j < l2 + i; j++, rolltmp /= 10)
-			calc[i * lsum + j + i] = rolltmp % 10;
-		while (rolltmp)
-			calc[i * lsum + j + i] = rolltmp % 10, rolltmp /= 10, j++;
+		if (num[i] < '0' || num[i] > '9')
+			return (0);
 	}
-	for (i = 0, rolltmp = 0; i < lsum; i++, rolltmp /= 10)
-		rolltmp += _addup(calc, lsum, i), final[i] = rolltmp % 10 + '0';
-	final[i + 1] = '\0', i = cut_zeros(final), rev_(final);
-	final[i + 2] = '\0', _prt(final), free(calc), free(final);
+	return (1);
+}
+/**
+  * err - errors r us
+  * @status: error code 4 exit
+  * Return: void
+  */
+void err(int status)
+{
+	_putchar('E');
+	_putchar('r');
+	_putchar('r');
+	_putchar('o');
+	_putchar('r');
+	_putchar('\n');
+	exit(status);
+}
+/**
+  * main - getting the args
+  * @argc: args #
+  * @argv: arg array
+  * Return: 0
+  */
+int main(int argc, char **argv)
+{
+	/* declarations */
+	int i, j, len1 = 0, len2 = 0;
+	int *res;
+	/* too many args? too few? */
+	if (argc != 3)
+	{
+		err(98);
+	}
+	/* using isvalid */
+	for (i = 1; i < argc; i++)
+	{
+		if (!(is_valid(argv[i])))
+			err(98);
+		if (i == 1)
+		{
+			for (j = 0; argv[i][j]; j++)
+				len1++;
+		}
+		if (i == 2)
+		{
+			for (j = 0; argv[i][j]; j++)
+				len2++;
+		}
+	}
+	res = int_calloc(len1 + len2, sizeof(int));
+	if (res == NULL)
+		err(98);
+	mult(res, argv[1], argv[2], len1, len2);
+	free(res);
 	return (0);
 }
