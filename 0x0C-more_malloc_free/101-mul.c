@@ -1,132 +1,197 @@
+#include <stdlib.h>
 #include "main.h"
-
 /**
- * adding_all_mul - sum all the addition to know the multiplication result
- * @a: number 1
- * @len_a: lenght of number 1
- * @b: number 2
- * @len_b: lenght of number 2
- * Return: Addition pointer to the total resul of the  multiplication
+ * _prt - print string followed by newline
+ * @s: string to print
  */
-add_t *adding_all_mul(char *a, int len_a, char *b, int len_b)
+void _prt(char *s)
 {
-	add_t *result = NULL;
-	int i = 0, j = 0, carry = 0;
-
-	result = malloc(sizeof(add_t));
-
-	result->next = NULL, result->n_dig = 0, result->len_r = len_a + len_b;
-
-	result->n_add = malloc(sizeof(char) * result->len_r);
-
-	for (i = 0; i < result->len_r; i++)
-		result->n_add[i] = '0';
-
-	for (i = len_a - 1; i >= 0; i--)
-	{
-		carry = 0;
-		for (j = len_b - 1; j >= 0; j--)
-		{
-			carry += (a[i] - '0') * (b[j] - '0');
-			carry += result->n_add[i + j + 1] - '0';
-
-			result->n_add[i + j + 1] = (carry % 10) + '0';
-			carry /= 10;
-		}
-		if (carry)
-			result->n_add[i + j + 1] = (carry % 10) + '0';
-	}
-	if (result->n_add[0] != '0')
-		result->n_dig = len_a + len_b;
-	else
-		result->n_dig = len_a + len_b - 1;
-
-	return (result);
+	while (*s != '\0')
+		_putchar(*s++);
+	_putchar('\n');
 }
-
 /**
- * print_free_result - print the result of the multiplication and free all
- * @result: Addition pointer to the total resul of the  multiplication
- * Result: Nothing
+ * _realloc - Re-allocate memory for a larger or smaller size
+ * @ptr: Pointer to the old memory block
+ * @old_size: The old size of the memory block
+ * @new_size: The new size of the memory block being created
+ *
+ * Return: Pointer to new memory
  */
-void print_free_result(add_t *result)
+void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size)
 {
-	int i = 0, start_n = 0;
+	void *space;
+	char *spacecpy, *ptrcpy;
+	unsigned int i;
+
+	if (new_size == 0 && ptr != NULL)
+	{
+		free(ptr);
+		return (NULL);
+	}
+	if (new_size == old_size)
+		return (ptr);
+	/* regardless, we need to make new space of new_size */
+	space = malloc(new_size);
+	if (space == NULL)
+		return (NULL);
+	/* if ptr is null, return space without copying */
+	if (ptr == NULL)
+		return (space);
+	/* copy old contents into new space */
+	spacecpy = space;
+	ptrcpy = ptr;
+	for (i = 0; i < old_size && i < new_size; i++)
+		spacecpy[i] = ptrcpy[i];
+	free(ptr);
+	return (space);
+}
+/**
+ * _calloc - Allocate memory and initalize space to zero
+ * @nmemb: number of elements
+ * @size: size of bytes
+ *
+ * Return: pointer to memory space, or NULL
+ */
+void *_calloc(unsigned int nmemb, unsigned int size)
+{
+	void *space;
+	char *memset;
+	unsigned int i;
+
+	if (nmemb == 0 || size == 0)
+		return (NULL);
+	space = malloc(nmemb * size);
+	if (space == NULL)
+		return (NULL);
+
+	memset = space;
+	for (i = 0 ; i < nmemb * size; i++)
+	{
+		*(memset + i) = 0;
+	}
+
+	return (space);
+}
+/**
+ * _notdigit - check to see if string is only digits
+ * @s: string to check
+ *
+ * Return: 0 if only digits, 1 if non digit chars
+ */
+int _notdigit(char *s)
+{
+	for ( ; *s; s++)
+		if (*s < '0' || *s > '9')
+			return (1);
+	return (0);
+}
+/**
+ * rev_ - Reverse a string in place
+ * @s: string to reverse
+ */
+void rev_(char *s)
+{
+	char tmp;
+	int i, j;
+
+	for (i = 0; s[i]; i++)
+		;
+	i--;
+	for (j = 0; j <= i / 2; j++)
+	{
+		tmp = s[j];
+		s[j] = s[i - j];
+		s[i - j] = tmp;
+	}
+}
+/**
+ * _addup - add up integer array
+ * @arr: array to count
+ * @n: number of ints to count
+ * @place: which tens place to count
+ *
+ * Return: result of addition
+ */
+int _addup(int *arr, int n, int place)
+{
+	int sum, i;
+
+	for (i = 0, sum = 0; i < n; i++)
+	{
+		sum += arr[n * i + place];
+	}
+	return (sum);
+}
+/**
+ * cut_zeros - cut off my zeros
+ * @s: string to cut
+ *
+ * Return: length of s
+ */
+int cut_zeros(char *s)
+{
+	int i;
 
 	i = 0;
-	while (i < result->n_dig)
+	while (*s != '\0')
 	{
-		if (start_n || result->n_add[result->len_r - result->n_dig + i] != '0')
+		i++;
+		s++;
+	}
+	i--;
+	s--;
+	while (*s == '0' && i > 0)
+	{
+		*s = '\0';
+		s--;
+		i--;
+	}
+	return (i);
+}
+
+/**
+ * main - multiple two numbers and print the result
+ * @argc: Number of arguments
+ * @argv: Argument strings
+ *
+ * Return: 0
+ */
+int main(int argc, char *argv[])
+{
+	int *calc;
+	char *final;
+	unsigned int l1, l2, lsum, i, j, ntmp, rolltmp;
+
+	if (argc != 3)
+		_prt("Error"), exit(98);
+	if (_notdigit(argv[1]) || _notdigit(argv[2]))
+		_prt("Error"), exit(98);
+	for (l1 = 0; argv[1][l1]; l1++)
+		;
+	for (l2 = 0; argv[2][l2]; l2++)
+		;
+	lsum = l1 + l2, final = malloc((lsum + 2) * sizeof(*final));
+	calc = _calloc(lsum * lsum, sizeof(int));
+	if (calc == NULL)
+		_prt("Error"), exit(98);
+	rev_(argv[1]), rev_(argv[2]);
+	for (i = 0; i < l1; i++)
+	{
+		rolltmp = 0, ntmp = 0;
+		for (j = 0; j < l2; j++)
 		{
-			_putchar(result->n_add[result->len_r - result->n_dig + i]);
-			start_n = 1;
+			ntmp = (argv[1][i] - '0') * (argv[2][j] - '0') + rolltmp;
+			calc[i * lsum + j + i] = ntmp % 10, rolltmp = ntmp / 10;
 		}
-		i++;
+		for (; j < l2 + i; j++, rolltmp /= 10)
+			calc[i * lsum + j + i] = rolltmp % 10;
+		while (rolltmp)
+			calc[i * lsum + j + i] = rolltmp % 10, rolltmp /= 10, j++;
 	}
-	if (!result->n_dig || !start_n)
-		_putchar('0');
-	_putchar('\n');
-	free(result->n_add);
-	free(result);
-}
-
-/**
- * error_message - print an error message and exit with status 98
- * Return: Nothing
- */
-void error_message(void)
-{
-	char error_msg[] = "Error";
-	int i = 0;
-
-	while (error_msg[i] != '\0')
-	{
-		_putchar(error_msg[i]);
-		i++;
-	}
-
-	_putchar('\n');
-
-	exit(98);
-}
-
-/**
- * main - multiply 2 long numbers
- * usage <> ./mul num1 num2
- * @ac: number of arguments
- * @av: list of arguments
- * Return: 0 on success, another number otherwise
- */
-int main(int ac, char **av)
-{
-	char *a = NULL, *b =  NULL;
-	int i = 0, len_a = 0, len_b = 0, is_a = 1, is_b = 1, len_r = 0;
-	add_t *result = NULL;
-
-	if (ac != 3)
-		error_message();
-
-	for (i = 0, a = av[1], b = av[2]; is_a == 1 || is_b == 1; i++)
-	{
-		if (is_a == 1 && a[i] == '\0')
-			is_a = 0, len_a = i;
-		if (is_b == 1 && b[i] == '\0')
-			is_b = 0, len_b = i;
-		if ((is_a == 1 && (a[i] < '0' || a[i] > '9')) ||
-				(is_b == 1 && (b[i] < '0' || b[i] > '9')))
-			error_message();
-	}
-
-	if (len_a == 0 || len_b == 0)
-		error_message();
-
-	len_r = len_a + len_b;
-	if (len_a > len_b)
-		a = av[2], b = av[1], len_a = len_b, len_b = len_r - len_b;
-
-	result = adding_all_mul(a, len_a, b, len_b);
-
-	print_free_result(result);
-
+	for (i = 0, rolltmp = 0; i < lsum; i++, rolltmp /= 10)
+		rolltmp += _addup(calc, lsum, i), final[i] = rolltmp % 10 + '0';
+	final[i + 1] = '\0', i = cut_zeros(final), rev_(final);
+	final[i + 2] = '\0', _prt(final), free(calc), free(final);
 	return (0);
 }
