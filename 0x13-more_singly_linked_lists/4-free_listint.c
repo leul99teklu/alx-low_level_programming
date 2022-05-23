@@ -1,14 +1,11 @@
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
 #include "lists.h"
 
 /**
-* free_listint - frees memory of listint_t
-*@head: head of the list
-* Return: no return
-*/
-
+ * free_listint - frees a linked list
+ * @head: head of a list.
+ *
+ * Return: no return.
+ */
 void free_listint(listint_t *head)
 {
 	listint_t *temp;
