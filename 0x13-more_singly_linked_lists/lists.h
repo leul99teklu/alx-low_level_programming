@@ -24,11 +24,11 @@ typedef struct listint_s
  *
  * Description: singly linked list of pointers
  */
-typedef struct listp_s
+typedef struct listt_s
 {
 	void *t;
-	struct listp_s *next;
-} listp_t;
+	struct listt_s *next;
+} listt_t;
 
 size_t print_listint(const listint_t *h);
 size_t listint_len(const listint_t *h);
